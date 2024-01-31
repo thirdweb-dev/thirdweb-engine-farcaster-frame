@@ -47,7 +47,7 @@ export default async function handler(
         return res.status(200).send(
           computeHtml({
             imagePath: "<next_js_image_path>",
-            postType: "follow",
+            postType: "start",
             content: "You already own the NFT",
           })
         );
@@ -59,7 +59,7 @@ export default async function handler(
         return res.status(200).send(
           computeHtml({
             imagePath: "<next_js_image_path>",
-            postType: "follow",
+            postType: "start",
             content: "Sorry we went out of gas :(",
           })
         );
