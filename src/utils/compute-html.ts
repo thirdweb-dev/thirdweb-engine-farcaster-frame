@@ -1,3 +1,4 @@
+import { config } from "@/config/config";
 interface ComputeHtmlParameters {
   postType: string;
   content: string;
@@ -16,16 +17,16 @@ export const computeHtml = ({
         <meta property="og:title" content="Thirdweb Frames" />
         <meta
           property="og:image"
-          content="https://${process.env.NEXT_PUBLIC_VERCEL_URL}${imagePath}"
+          content="https://${config.hostUrl}${imagePath}"
         />
         <meta property="fc:frame" content="vNext" />
         <meta
           property="fc:frame:image"
-          content="https://${process.env.NEXT_PUBLIC_VERCEL_URL}${imagePath}"
+          content="https://${config.hostUrl}${imagePath}"
         />
         <meta
           property="fc:frame:post_url"
-          content="https://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/mint?type=${postType}"
+          content="https://${config.hostUrl}/api/mint?type=${postType}"
         />
         <meta property="fc:frame:button:1" content="${content}" />
       </head>
