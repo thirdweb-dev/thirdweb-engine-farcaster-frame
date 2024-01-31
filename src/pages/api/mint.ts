@@ -39,6 +39,20 @@ export default async function handler(
     const action = await Warpcast.validateMessage(trustedData.messageBytes);
 
     if (type === "start") {
+      const isNFTOwned = await ThirdWebEngine.isNFTOwned(
+        action.interactor.custody_address
+      );
+
+      if (isNFTOwned) {
+        return res.status(200).send(
+          computeHtml({
+            imagePath: "<next_js_image_path>",
+            postType: "follow",
+            content: "You already own the NFT",
+          })
+        );
+      }
+
       const isBalanceLow = await ThirdWebEngine.isBalanceLow();
 
       if (isBalanceLow) {

@@ -13,6 +13,17 @@ const mintResponseSchema = z.object({
   }),
 });
 
+const ownedResponseSchema = z.object({
+  result: z.array(
+    z.object({
+      metadata: z.object({
+        owner: z.string().startsWith("0x"),
+        type: z.string(),
+        supply: z.string(),
+      }),
+    })
+  ),
+});
 export const httpFetchBalanceStatus = async () => {
   const response = await fetch(
     `${config.thirdweb.engine.url}/backend-wallet/${config.thirdweb.chainId}/${config.thirdweb.engine.wallet}/get-balance`,
@@ -29,6 +40,24 @@ export const httpFetchBalanceStatus = async () => {
   const result = await response.json();
 
   return balanceResponseSchema.parse(result);
+};
+
+export const httpFetchOwned = async (reciever: string) => {
+  const response = await fetch(
+    `${config.thirdweb.engine.url}/contract/${config.thirdweb.chainId}/${config.contractAddress}/erc721/get-owned?walletAddress=${reciever}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${config.thirdweb.engine.accessToken}`,
+        "x-backend-wallet-address": config.thirdweb.engine.wallet!,
+      },
+    }
+  );
+
+  const result = await response.json();
+
+  return ownedResponseSchema.parse(result);
 };
 
 export const httpMint = async (receiver: string) => {

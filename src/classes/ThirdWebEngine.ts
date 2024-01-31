@@ -1,6 +1,10 @@
 import { ethers } from "ethers";
 import { BigNumber } from "bignumber.js";
-import { httpFetchBalanceStatus, httpMint } from "@/api/fetchers";
+import {
+  httpFetchBalanceStatus,
+  httpFetchOwned,
+  httpMint,
+} from "@/api/fetchers";
 
 export class ThirdWebEngine {
   public static isBalanceLow = async () => {
@@ -15,5 +19,10 @@ export class ThirdWebEngine {
   public static mint = async (receiver: string) => {
     const response = await httpMint(receiver);
     return response;
+  };
+
+  public static isNFTOwned = async (receiver: string) => {
+    const response = await httpFetchOwned(receiver);
+    return response.result.length > 0;
   };
 }
