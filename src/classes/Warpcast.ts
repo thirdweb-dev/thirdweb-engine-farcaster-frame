@@ -4,13 +4,20 @@ import { z } from "zod";
 // Neynar's api
 const apiUrl = "https://api.neynar.com";
 
-const recastsSchema = z.array(
-  z.object({
-    fid: z.number(),
-    fname: z.string().min(1),
-  })
-);
-
+const recastsSchema = z.object({
+  likes: z.array(
+    z.object({
+      fid: z.number(),
+      fname: z.string().min(1),
+    })
+  ),
+  recasts: z.array(
+    z.object({
+      fid: z.number(),
+      fname: z.string().min(1),
+    })
+  ),
+});
 const validateMessageSchema = z.object({
   valid: z.literal(true),
   action: z.object({
@@ -33,7 +40,7 @@ export class Warpcast {
     };
   }
 
-  private static async fetchAllRecasts() {
+  private static async fetchAllReactions() {
     const url = `${apiUrl}/v2/farcaster/cast?identifier=${config.warpcast.castHas}&type=hash`;
 
     const response = await fetch(url, {
@@ -43,15 +50,20 @@ export class Warpcast {
 
     const data = await response
       .json()
-      .then((res) => res.cast.reactions.recasts)
+      .then((res) => res.cast.reactions)
       .then(recastsSchema.parse);
 
     return data;
   }
 
   public static async hasRecasted(fid: number) {
-    const recasts = await Warpcast.fetchAllRecasts();
-    return recasts.some((recast) => recast.fid === fid);
+    const reactions = await Warpcast.fetchAllReactions();
+    return reactions.recasts.some((recast) => recast.fid === fid);
+  }
+
+  public static async hasLiked(fid: number) {
+    const reactions = await Warpcast.fetchAllReactions();
+    return reactions.likes.some((likes) => likes.fid === fid);
   }
 
   public static async validateMessage(messageBytes: string) {

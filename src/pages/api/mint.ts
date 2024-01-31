@@ -12,6 +12,9 @@ const requestBodyWarpcastSchema = z.object({
 });
 
 const requestQuerySchema = z.object({
+  // "start" = will display Re-cast to mint & Like to mint
+  // "recast" = will attempt to see if you have recasted and liked (you can change to 'recast-like' if you want)
+  // "mint" = will be the actual mint process and display a congratulation html view
   type: z.union([z.literal("start"), z.literal("recast"), z.literal("mint")]),
 });
 
@@ -65,7 +68,19 @@ export default async function handler(
           computeHtml({
             imagePath: "<next_js_image_path>",
             postType: "recast",
-            content: "Re-cast is required to mint the NFT",
+            content: "Like is required to mint the NFT",
+          })
+        );
+      }
+
+      const hasLiked = await Warpcast.hasLiked(action.interactor.fid);
+
+      if (!hasLiked) {
+        return res.status(200).send(
+          computeHtml({
+            imagePath: "/farcaster.png",
+            postType: "recast",
+            content: "Like is required to mint the NFT",
           })
         );
       }
@@ -86,7 +101,7 @@ export default async function handler(
         computeHtml({
           imagePath: "<next_js_image_path>",
           postType: "start", // Do your own custom post_url after user has minted the NFT + clicks your button
-          content: "Congrats! You minted the NFT",
+          content: "Congrats! The NFT was sent to your wallet",
         })
       );
     }
