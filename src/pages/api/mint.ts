@@ -55,7 +55,7 @@ export default async function handler(
         computeHtml({
           imagePath: "<next_js_image_path>",
           postType: "recast",
-          content: "Re-cast to mint",
+          content: "Like & recast to mint",
         })
       );
     }
@@ -89,7 +89,7 @@ export default async function handler(
         computeHtml({
           imagePath: "<next_js_image_path>",
           postType: "mint",
-          content: "Mint NFT",
+          content: "Mint",
         })
       );
     }
