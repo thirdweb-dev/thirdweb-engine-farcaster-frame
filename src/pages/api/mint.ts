@@ -60,7 +60,7 @@ export default async function handler(
           computeHtml({
             imagePath: "<next_js_image_path>",
             postType: "start",
-            content: "Sorry we went out of gas :(",
+            content: "Sorry, we're out of gas!",
           })
         );
       }
